@@ -1,0 +1,256 @@
+#top-bar {
+    background-color: #6bbe607e; 
+    height: 60px; 
+    display: flex;
+    align-items: center;
+    padding: 0 20px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+/* Text styling */
+#top-bar .top-bar-text {
+    font-family: 'lilita one';
+    font-size: 40px; 
+    color: rgb(255, 255, 255); 
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Make map_container relative for absolute sidebar positioning */
+#map_container {
+    position: relative;
+    height: calc(100vh - 60px); /* Full height minus top bar */
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+    min-width: 150px;
+    height: 100%;
+    background-color: #293949;
+    padding: 20px;
+    z-index: 1000;
+    box-sizing: border-box;
+    font-family: 'lilita one';
+}
+
+/* Make map the same width as the top bar */
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+/* copied from Tutorial */
+@import url('//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css');
+body {
+  color: #5D5F63;
+  background: #293949;
+  font-family: 'lilita one';
+  padding: 0;
+  margin: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+.sidebar-toggle {
+  margin-left: -240px;
+}
+
+.sidebar {
+  background: #293949;
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  -webkit-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  -ms-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  z-index: 100;
+  #leftside-navigation {
+    ul, ul ul {
+      margin: -2px 0 0;
+      padding: 0;
+    }
+    ul {
+      li {
+        list-style-type: none;
+        border-bottom: 1px solid rgba(255,255,255,.05);
+        &.active {
+          & > a {
+            color: #1abc9c;
+          }
+          ul {
+            display: block;
+          }
+        }
+        a {
+          color: #ffffff;
+          text-decoration: none;
+          display: block;
+          padding: 18px 0 18px 25px;
+          font-size: 40px;
+          outline: 0;
+          cursor: pointer;
+          -webkit-transition: all 200ms ease-in;
+          -moz-transition: all 200ms ease-in;
+          -o-transition: all 200ms ease-in;
+          -ms-transition: all 200ms ease-in;
+          transition: all 200ms ease-in;
+          &:hover {
+            color: #1abc9c;
+          }
+          span {
+            display: inline-block;
+          }
+          i {
+            width: 20px;
+            .fa-angle-left, .fa-angle-right {
+              padding-top: 3px;
+            }
+          }
+        }
+      }
+    }
+    ul ul {
+      display: none;
+      li {
+        background: #23313f;
+        margin-bottom: 0;
+        margin-left: 0;
+        margin-right: 0;
+        border-bottom: none;
+        a {
+          font-size: 25px;
+          padding-top: 13px;
+          padding-bottom: 13px;
+          color: #ffffff;
+        }
+      }
+    }
+    ul ul ul{
+      display: none;
+      li {
+        background: #23313f;
+        margin-bottom: 0;
+        margin-left: 0;
+        margin-right: 0;
+        border-bottom: none;
+        a {
+          font-size: 15px;
+          padding-top: 13px;
+          padding-bottom: 13px;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}
+
+#dynamic-populated-menu li ul li a.selected {
+  background-color: #6bbe607e; /* blue */
+  color: white;
+  font-weight: bold;
+  /* text color */
+  color: #5a277c;
+  width: 100%;
+}
+
+#time-component {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #23313f;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  font-family: 'lilita one';
+  /* Text size */
+  font-size: 30px;
+}
+
+.flatpickr-input {
+  font-family: 'lilita one';
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Make icon align to the right of the thing its in */
+.metadata-icon {
+  font-size: 14px;
+  color: #ffffff;
+  cursor: pointer;
+  padding-right: 10px;
+}
+
+.metadata-icon:hover {
+  color: #0078d7; /* blue on hover */
+}
+
+.metadata-box {
+  position: absolute;
+  top: 50px;
+  bottom: 50px;
+  left: 100%;
+  transform: translateX(-0%);
+  width: 400px;
+  max-width: 90%;
+  background: #23313f;
+  color: #ffffff;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  padding: 20px;
+  z-index: 1000;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-y: auto; 
+  overflow-x: hidden;
+}
+
+.metadata-box.hidden {
+  display: none;
+}
+
+#metadata-close {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+#showOnMapBtn{
+  background-color: #6bbe607e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: 'lilita one';
+}
+
+#showOnMapBtn:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+#datePicker {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}

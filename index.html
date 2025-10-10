@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXPANSE exposure map prototype</title>
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+
+    <!--external scripts-->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.14.0/proj4.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.min.js"></script> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gabriela&family=Lilita+One&family=Pangolin&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div id="top-bar">
+        <span class="top-bar-text">EXPANSE Map Prototype</span>
+    </div>
+    <div id="map_container">
+        <div id="map"></div>
+    </div>
+    <div id="sidebar">
+        <aside class="sidebar">
+            <div id="leftside-navigation" class="nano">
+                <ul class="nano-content" id="dynamic-populated-menu">
+                    <!-- menu gets inserted here -->
+                </ul>
+            </div>
+
+            <div id="time-component">
+                <h3>Time Selection</h3>
+                <div class="time-controls">
+                    <input id="datePicker" type="text" placeholder="Select a date">
+                </div>
+            </div>
+            <button id="showOnMapBtn" disabled>Show on Map</button>
+            
+        </aside>
+        <div id="metadata-box" class="metadata-box hidden">
+            <button id="metadata-close">&times;</button>
+            <div id="metadata-content"></div>
+        </div>
+    </div>
+
+
+
+    <!--local scripts-->
+    <script src="script.js"></script>
+    <script src="map.js"></script>
+
+    
+    <!-- External scripts-->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+    
+    <!-- <script src ="remove_link.js"></script> -->
+</body>
+</html>
