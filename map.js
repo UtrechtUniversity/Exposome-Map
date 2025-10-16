@@ -1,73 +1,80 @@
-var map = L.map('map').setView([52.3784, 4.9009], 7);
+var map = L.map('map').setView([47.58, 6.06], 6);
+var activeLayer = null;
+var geoserverURL = "http://127.0.0.1:8080/geoserver/EXPANSE_map_prototype/wms";
+var geoserver_workspace = "EXPANSE_map_prototype";
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-//overlay layers
-// var layerName1 = 'EXPANSE_map_prototype:OZOB25_MAV_XX_02_13_v2';
+// Basemap options
+var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a>OpenStreetMap</a> contributors',
+});
+var darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a>OpenStreetMap</a> contributors &copy; <a>CARTO</a>',
+    isBasemap: true
+});
+var lightLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a>OpenStreetMap</a> contributors &copy; <a>CARTO</a>',
+    isBasemap: true
+});
 
-// var wmsLayer1 = new L.TileLayer.WMS(geoServerUrl, {
-//     layers: layerName1,
-//     format: 'image/png',
-//     transparent: true,
-//     attribution: ""
-// }).setOpacity(1).addTo(map);
+// Add baselayers to selection control
+var baseLayers = {
+    "OpenStreetMap": osmLayer,
+    "Dark background": darkLayer,
+    "Light background": lightLayer
+};
+L.control.layers(baseLayers).addTo(map);
 
-
-var geoServerUrl = 'http://127.0.0.1:8080/geoserver/EXPANSE_map_prototype/wms';
-// Add event listener for the show on map button. When clicked, it will print the info of the window item selected.
+// Add event listener for the show on map button. When clicked, it will fetch the selected layer
 document.getElementById("showOnMapBtn").addEventListener("click", function() {
-    if (window.selectedItem) {
-        console.log("Show on map clicked for:", window.selectedItem);
-        var storename = window.selectedItem.store;
-        console.log("Store name:", storename);
+    if (window.selectedItem) {        
+        var layerName = window.selectedItem.geoserver_layer;
+        console.log("Layer name:", layerName);
+        var style = window.selectedItem.geoserver_style;
+        console.log("Style:", style);
+        
+        var date = window.selectedDate;
+        console.log("Selected date:", date);
 
-        if (window.currentProductLayer) {
-            map.removeLayer(window.currentProductLayer);
+        if (window.currentDisplayedLayer) {
+            map.removeLayer(window.currentDisplayedLayer);
         }
-
-        window.currentProductLayer = L.tileLayer.wms(geoServerUrl, {
-            layers: `EXPANSE_map_prototype:${storename}`,
+        window.currentDisplayedLayer = L.tileLayer.wms(geoserverURL, {
+            layers: `${geoserver_workspace}:${layerName}`,
             format: 'image/png',
             version: '1.1.0',
             transparent: true,
             attribution: "",
-            styles: "NO2B100_AAV"
+            styles: style
         }).addTo(map);
 
-        var requestUrl = `${geoServerUrl}?service=WMS&version=1.1.0&request=GetMap&layers=EXPANSE_map_prototype%3A${storename}&bbox=3770675.0%2C2927525.0%2C4081900.0%2C3192300.0&width=768&height=653&srs=EPSG%3A3035&styles=NO2B100_AAV&format=image%2Fgeotiff`;
-        console.log("Request URL:", requestUrl);
-                        fetch(requestUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('No network response');
-                }
-                return response.blob();
-            })
+        // Update map label
+        var mapLabel = document.getElementById("map-label");
+        console.log("Map label:", window.selectedItem);
+        mapLabel.innerHTML = `<strong> ${window.selectedItem.Description} ${date || 'N/A'}</strong>`;
     }
 });
 
+map.on('click', function(e) {
+    if (!window.selectedItem) {
+        console.warn("No layer selected");
+        return;
+    }
+    var layerName = window.currentDisplayedLayer.options.layers;
+    console.log("Layer name:", layerName);
+    var bbox = map.getBounds().toBBoxString();
+    var point = map.latLngToContainerPoint(e.latlng);
 
-window.addEventListener("itemSelected", e => {
-  const selected = e.detail;
-  console.log("New item selected:", selected);
-
-  // Example: update map or details panel
-//   updateMap(selected);
+    var requestURL = `${geoserverURL}?request=GetFeatureInfo&service=WMS&version=1.1.0&layers=${layerName}&query_layers=${layerName}&info_format=text/plain&x=${point.x}&y=${point.y}&width=${map.getSize().x}&height=${map.getSize().y}&bbox=${bbox}&srs=EPSG:4326`;
+    console.log("GetFeatureInfo URL: ", requestURL);
 });
 
-// window.addEventListener("itemSelected", e => {
-//   const item = e.detail; // This is the same object stored in window.selectedItem
-//   console.log("New item selected:", item.description, item);
-// });
 
-
-
-// //click function to fetch data of active layer
-// map.on('click', function(e) {
-//     if (activeLayers.size > 0) {
+//     if (activeLayer.size > 0) {
 //         var point = map.latLngToContainerPoint(e.latlng);
 //         var x = Math.round(point.x);
 //         var y = Math.round(point.y);

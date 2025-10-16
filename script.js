@@ -1,11 +1,11 @@
-
-
 fetch("metadata.json")
   .then(response => response.json())
   .then(data => {
     window.dataCatalogue = data; 
     initMenu(data);
   });
+
+window.selectedDate = null;
 
 const menuContainer = document.getElementById("dynamic-populated-menu");
 
@@ -41,7 +41,7 @@ function initMenu(dataCatalogue) {
         productItem.classList.add("product-item");
         
         const itemA = document.createElement("a");
-        itemA.textContent = item.description;
+        itemA.textContent = item.Description;
         itemA.itemData = item;
 
         const metadataIcon = document.createElement("span");
@@ -53,9 +53,12 @@ function initMenu(dataCatalogue) {
             const metadataBox = document.getElementById("metadata-box");
             const metadataContent = document.getElementById("metadata-content");
 
+
+            const metadataToShow = ["Description", "File type", "Time period", "Spatial resolution", "Extent", "Owner", "CRS"];
+
             metadataContent.innerHTML = "";
             for (const key in item) {
-              if (item.hasOwnProperty(key)) {
+              if (item.hasOwnProperty(key) && metadataToShow.includes(key)) {
                 const propertyDiv = document.createElement("div");
                 propertyDiv.style.textAlign = "left";
 
@@ -115,9 +118,6 @@ menuContainer.addEventListener("click", function(e) {
     new CustomEvent("itemSelected", { detail: window.selectedItem })
     
     );
-
-
-    // Use it immediately
     display_time_component(window.selectedItem);
   }
 });
@@ -135,79 +135,114 @@ if (item) {
 }
 
 const dateInput = document.getElementById("datePicker");
-const fp = flatpickr(dateInput, {
-  dateFormat: "Y-m-d",
-  minDate: "2023-01-01",
-  maxDate: "2025-12-31",
-  onChange: function(selectedDates, dateStr, instance) {
-    console.log("Selected date:", dateStr);
-  }
-});
 
 function display_time_component(item) {
   if (!item || !item.temporal_resolution) {
-    console.warn("Item or temporal_resolution missing:", item);
+    console.warn("Item or temporal_resolution missing");
     return;
   }
 
-  const dateInput = document.getElementById("datePicker");
+  const timeControls = document.querySelector(".time-controls");
+  timeControls.innerHTML = ""; // Clear previous picker
 
-  if (dateInput._flatpickr) {
-    dateInput._flatpickr.destroy();
-  }
+  const lastSelected = window.selectedDate || null;
 
   let options = {
-    onChange: function(selectedDates, dateStr, instance) {
-      console.log("Selected date:", dateStr, "for", item.description);
+    onChange: function(selectedDates, dateStr) {
+      window.selectedDate = dateStr;
     }
   };
+
   switch (item.temporal_resolution) {
-    case "Daily":
+    // Add a listener to update window.selectedDate when a date is picked
+    case "Daily": {
+      const input = document.createElement("input");
+      input.id = "datePicker";
+      input.type = "text";
+      input.placeholder = "Select a date";
+      timeControls.appendChild(input);
+
       options.dateFormat = "d-M-Y";
+      options.altFormat = "d_m_Y";
       options.minDate = item.start_time;
       options.maxDate = item.end_time;
-      flatpickr(dateInput, options);
-      break;
+      if (lastSelected) options.defaultDate = lastSelected;
 
-    case "Monthly":
-      options.dateFormat = "d-m-Y";
+      flatpickr(input, options);
+      break;
+    }
+
+    case "Monthly": {
+      const input = document.createElement("input");
+      input.id = "datePicker";
+      input.type = "text";
+      input.placeholder = "Select a month";
+      timeControls.appendChild(input);
+
+      // Add a listener to update window.selectedDate when a month is picked
       options.plugins = [new monthSelectPlugin({
         shorthand: true,
         dateFormat: "M-Y",
-        altFormat: "M-Y",
+        altFormat: "m_Y",
         theme: "dark"
       })];
       options.minDate = item.start_time;
       options.maxDate = item.end_time;
-      flatpickr(dateInput, options);
+      if (lastSelected) options.defaultDate = lastSelected;
+
+      flatpickr(input, options);
       break;
+    }
 
+    case "Annual": {
+      const start_time = item.start_time;
+      const end_time = item.end_time;
 
-    case "Annual":
-        const start_time = item.start_time;
-        const end_time = item.end_time;
+      const startYear = parseInt(start_time.split("_")[2]);
+      const endYear = parseInt(end_time.split("_")[2]);
 
-      default:
-      console.log("Unknown temporal_resolution:", item.temporal_resolution, "for", item.description);
-      // handleDefault(item);
+      const select = document.createElement("select");
+      select.classList.add("year-select");
+      select.id = "yearPicker";
+
+      for (let year = startYear; year <= endYear; year++) {
+        const option = document.createElement("option");
+        option.classList.add("year_option");
+        option.value = year;
+        option.textContent = year;
+        select.appendChild(option);
+      }
+
+      if (lastSelected) select.value = lastSelected;
+
+      select.addEventListener("change", () => {
+        window.selectedDate = select.value;
+      });
+
+      timeControls.appendChild(select);
+      break;
+    }
+
+    default:
+      console.log("Unknown temporal_resolution:", item.temporal_resolution);
       break;
   }
-  
+  setupShowOnMapListener();
 }
 
+function setupShowOnMapListener() {
+  const showOnMapBtn = document.getElementById("showOnMapBtn");
+  const picker = document.querySelector(".time-controls input, .time-controls select");
 
-// Add a "Add to map" button that's clickable only when a date is selected 
-const showOnMapBtn = document.getElementById("showOnMapBtn");
-dateInput.addEventListener("change", function() {
-  showOnMapBtn.disabled = !dateInput.value;
-  if (!dateInput.value) {
-    console.log("Date cleared, button disabled");
-    // Optionally, remove the layer from the map if date is cleared
-    // removeLayerFromMap();
-  } else {
-    console.log("Date selected:", dateInput.value, "button enabled");
-  }
-});
+  if (!picker) return;
+
+  showOnMapBtn.disabled = !picker.value;
+
+  picker.addEventListener("change", function() {
+    showOnMapBtn.disabled = !picker.value;
+  });
+}
+
 
 
 document.getElementById("metadata-close").addEventListener("click", () => {

@@ -37,12 +37,22 @@
     z-index: 1000;
     box-sizing: border-box;
     font-family: 'lilita one';
+    overflow-y: auto; 
 }
 
 /* Make map the same width as the top bar */
 #map {
     height: 100%;
     width: 100%;
+}
+
+#map_label{
+  position: absolute;
+  bottom: 100px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
 }
 
 /* copied from Tutorial */
@@ -96,7 +106,9 @@ body {
           display: block;
           padding: 18px 0 18px 25px;
           font-size: 40px;
-          outline: 0;
+          /* Give it a gentle outline that separates it from the other items on the list */
+          border-bottom: 2px solid #52614e7e;
+          font-family: 'lilita one';
           cursor: pointer;
           -webkit-transition: all 200ms ease-in;
           -moz-transition: all 200ms ease-in;
@@ -164,18 +176,35 @@ body {
 
 #time-component {
   margin-top: 20px;
-  padding: 10px;
-  background-color: #23313f;
+  background-color: #293949;
   border-radius: 5px;
   color: white;
   text-align: center;
-  font-family: 'lilita one';
-  /* Text size */
+  font-family: 'lilita one', sans-serif;
   font-size: 30px;
 }
 
+/* Make the h3 less squished */
+#time-component h3 {
+  margin: 8px 0;
+  padding: 8px 6px;
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+/* Make the h3 less squished */
+#time-component h3 {
+  margin: 8px 0;
+  padding: 8px 6px;
+  font-size: 40px;
+  line-height: 1.3;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
 .flatpickr-input {
-  font-family: 'lilita one';
+  font-family: 'lilita one', sans-serif;
 }
 
 .product-item {
@@ -191,6 +220,7 @@ body {
   color: #ffffff;
   cursor: pointer;
   padding-right: 10px;
+  padding-left: 20px;
 }
 
 .metadata-icon:hover {
@@ -199,11 +229,11 @@ body {
 
 .metadata-box {
   position: absolute;
-  top: 50px;
-  bottom: 50px;
+  top: 100px;
   left: 100%;
   transform: translateX(-0%);
   width: 400px;
+  height: fit-content;
   max-width: 90%;
   background: #23313f;
   color: #ffffff;
@@ -246,11 +276,52 @@ body {
   cursor: not-allowed;
 }
 
-#datePicker {
-  width: 100%;
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+.year-select {
+  width: 50%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  cursor: pointer;
+  font-family: 'Lilita One', sans-serif;
+  text-align: center;
+}
+
+.year-select option {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Lilita One', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.year-select:hover {
+  border-color: #999;
+  cursor: pointer;
+}
+
+.year-select:focus {
+  outline: none;
+  border-color: #0078d7;
+  box-shadow: 0 0 3px rgba(0, 120, 215, 0.4);
+}
+
+/* Make themap label be on top of the map, on the bottom center */
+#map-label {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-family: 'Lilita One', sans-serif;
+  font-size: 30px;
+  color: #333;
+  z-index: 1000;
+  font-weight: 300;
 }
