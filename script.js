@@ -35,46 +35,48 @@ function initMenu(dataCatalogue) {
       // Level 3: Items
       const itemsUl = document.createElement("ul");
       dataCatalogue[category][subcategory].forEach(item => {
-        const itemLi = document.createElement("li");
+        if (item['show_on_map'] != true) return;
+          const itemLi = document.createElement("li");
 
-        const productItem = document.createElement("div");
-        productItem.classList.add("product-item");
-        
-        const itemA = document.createElement("a");
-        itemA.textContent = item.Description;
-        itemA.itemData = item;
+          const productItem = document.createElement("div");
+          productItem.classList.add("product-item");
+          
+          const itemA = document.createElement("a");
+          itemA.textContent = item.Description;
+          itemA.itemData = item;
 
-        const metadataIcon = document.createElement("span");
-        metadataIcon.classList.add("metadata-icon");
-        metadataIcon.innerHTML = "&#9432;";
+          const metadataIcon = document.createElement("span");
+          metadataIcon.classList.add("metadata-icon");
+          metadataIcon.innerHTML = "&#9432;";
 
-        // Launch metadata panel
-        metadataIcon.addEventListener("click", () => {
-            const metadataBox = document.getElementById("metadata-box");
-            const metadataContent = document.getElementById("metadata-content");
+          // Launch metadata panel
+          metadataIcon.addEventListener("click", () => {
+              console.log("Metadata for item:", item);
+              const metadataBox = document.getElementById("metadata-box");
+              const metadataContent = document.getElementById("metadata-content");
 
 
-            const metadataToShow = ["Description", "File type", "Time period", "Spatial resolution", "Extent", "Owner", "CRS"];
+              const metadataToShow = ["Description", "File type", "Time period", "Spatial resolution", "Extent", "Owner", "CRS"];
 
-            metadataContent.innerHTML = "";
-            for (const key in item) {
-              if (item.hasOwnProperty(key) && metadataToShow.includes(key)) {
-                const propertyDiv = document.createElement("div");
-                propertyDiv.style.textAlign = "left";
+              metadataContent.innerHTML = "";
+              for (const key in item) {
+                if (item.hasOwnProperty(key) && metadataToShow.includes(key)) {
+                  const propertyDiv = document.createElement("div");
+                  propertyDiv.style.textAlign = "left";
 
-                propertyDiv.innerHTML = `<strong>${key}</strong><br>${item[key]}<br><br>`;
-                metadataContent.appendChild(propertyDiv);
-            }
+                  propertyDiv.innerHTML = `<strong>${key}</strong><br>${item[key]}<br><br>`;
+                  metadataContent.appendChild(propertyDiv);
+              }
 
-            metadataBox.classList.remove("hidden");
+              metadataBox.classList.remove("hidden");
 
-        }});
+          }});
 
-        productItem.appendChild(itemA);
-        productItem.appendChild(metadataIcon);
+          productItem.appendChild(itemA);
+          productItem.appendChild(metadataIcon);
 
-        itemLi.appendChild(productItem);
-        itemsUl.appendChild(itemLi);
+          itemLi.appendChild(productItem);
+          itemsUl.appendChild(itemLi);
       });
 
       subLi.appendChild(itemsUl);
@@ -189,7 +191,6 @@ function display_time_component(item) {
       options.minDate = item.start_time;
       options.maxDate = item.end_time;
       if (lastSelected) options.defaultDate = lastSelected;
-
       flatpickr(input, options);
       break;
     }
@@ -204,6 +205,14 @@ function display_time_component(item) {
       const select = document.createElement("select");
       select.classList.add("year-select");
       select.id = "yearPicker";
+
+      const emptyOption = document.createElement("option");
+      emptyOption.value = "";
+      emptyOption.textContent = "";
+      emptyOption.disabled = true;
+      emptyOption.selected = true;
+      select.appendChild(emptyOption);
+
 
       for (let year = startYear; year <= endYear; year++) {
         const option = document.createElement("option");
@@ -243,8 +252,13 @@ function setupShowOnMapListener() {
   });
 }
 
-
-
 document.getElementById("metadata-close").addEventListener("click", () => {
     document.getElementById("metadata-box").classList.add("hidden");
+});
+
+var toggleButton = document.getElementById("sidebar-toggle");
+toggleButton.addEventListener("click", function(event) {
+    event.currentTarget.classList.toggle("change");
+    var sidebar = document.querySelector("#sidebar");
+    sidebar.classList.toggle("open");
 });
