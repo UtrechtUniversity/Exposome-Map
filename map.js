@@ -49,8 +49,6 @@ map.on('baselayerchange', function(e) {
 osmLayer.addTo(map);
 osmLayer.bringToBack();
 
-
-
 // Prepare dates to be used as parameters for WMS requests
 function selectDateCleanup(dateStr) {
     console.log("Selected date string:", dateStr);
