@@ -135,7 +135,7 @@ map.on('click', function(e) {
     var x = Math.round(point.x);
     var y = Math.round(point.y);
 
-    var requestURL = `${geoserverURL}?request=GetFeatureInfo&service=WMS&version=1.1.0&layers=${layerName}&query_layers=${layerName}&info_format=text/plain&x=${x}&y=${y}&width=${map.getSize().x}&height=${map.getSize().y}&bbox=${bbox}&srs=EPSG%3A3857`;
+    var requestURL = `${geoserverURL}?request=GetFeatureInfo&service=WMS&version=1.1.0&layers=${layerName}&query_layers=${layerName}&info_format=text/plain&x=${x}&y=${y}&width=${map.getSize().x}&height=${map.getSize().y}&bbox=${bbox}&srs=EPSG%3A4326`;
     console.log("GetFeatureInfo URL: ", requestURL);
 });
 

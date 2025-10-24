@@ -1,92 +1,74 @@
-fetch("metadata.json")
-  .then(response => response.json())
-  .then(data => {
-    window.dataCatalogue = data; 
-    initMenu(data);
-  });
+document.addEventListener("DOMContentLoaded", () => {
+    const menuContainer = document.getElementById("dynamic-populated-menu");
 
-window.selectedDate = null;
+    window.dataCataloguePromise.then(data => {
+        initMenu(data, menuContainer);
+    });
 
-const menuContainer = document.getElementById("dynamic-populated-menu");
+    function initMenu(dataCatalogue, container) {
+        for (const category in dataCatalogue) {
+            const categoryLi = document.createElement("li");
+            categoryLi.classList.add("sub-menu");
 
-function initMenu(dataCatalogue) {
+            const categoryA = document.createElement("a");
+            categoryA.href = "javascript:void(0)";
+            categoryA.innerHTML = `<span>${category.replace(/_/g, " ")}</span>`;
+            categoryLi.appendChild(categoryA);
 
-  for (const category in dataCatalogue) {
-    // Level 1: Category
-    const categoryLi = document.createElement("li");
-    categoryLi.classList.add("sub-menu");
+            const subUl = document.createElement("ul");
+            for (const subcategory in dataCatalogue[category]) {
+                const subLi = document.createElement("li");
+                const subA = document.createElement("a");
+                subA.href = "javascript:void(0)";
+                subA.textContent = subcategory.replace(/_/g, " ");
+                subLi.appendChild(subA);
 
-    const categoryA = document.createElement("a");
-    categoryA.href = "javascript:void(0)";
-    categoryA.innerHTML = `<span>${category.replace(/_/g, " ")}</span>`;
-    categoryLi.appendChild(categoryA);
+                const itemsUl = document.createElement("ul");
+                dataCatalogue[category][subcategory].forEach(item => {
+                    if (item.show_on_map !== true) return;
 
-    // Level 2: Subcategories
-    const subUl = document.createElement("ul");
+                    const itemLi = document.createElement("li");
+                    const productItem = document.createElement("div");
+                    productItem.classList.add("product-item");
 
-    for (const subcategory in dataCatalogue[category]) {
-      const subLi = document.createElement("li");
-      const subA = document.createElement("a");
-      subA.href = "javascript:void(0)";
-      subA.textContent = subcategory.replace(/_/g, " ");
-      subLi.appendChild(subA);
+                    const itemA = document.createElement("a");
+                    itemA.textContent = item.Description;
+                    itemA.itemData = item;
 
-      // Next to each description, make a small info icon
-      // Level 3: Items
-      const itemsUl = document.createElement("ul");
-      dataCatalogue[category][subcategory].forEach(item => {
-        if (item['show_on_map'] != true) return;
-          const itemLi = document.createElement("li");
+                    const metadataIcon = document.createElement("span");
+                    metadataIcon.classList.add("metadata-icon");
+                    metadataIcon.innerHTML = "&#9432;";
+                    metadataIcon.addEventListener("click", () => {
+                        const metadataBox = document.getElementById("metadata-box");
+                        const metadataContent = document.getElementById("metadata-content");
+                        metadataContent.innerHTML = "";
+                        ["Description","File type","Time period","Spatial resolution","Extent","Owner","CRS"].forEach(key => {
+                            if(item[key]) {
+                                const div = document.createElement("div");
+                                div.style.textAlign = "left";
+                                div.innerHTML = `<strong>${key}</strong><br>${item[key]}<br><br>`;
+                                metadataContent.appendChild(div);
+                            }
+                        });
+                        metadataBox.classList.remove("hidden");
+                    });
 
-          const productItem = document.createElement("div");
-          productItem.classList.add("product-item");
-          
-          const itemA = document.createElement("a");
-          itemA.textContent = item.Description;
-          itemA.itemData = item;
+                    productItem.appendChild(itemA);
+                    productItem.appendChild(metadataIcon);
+                    itemLi.appendChild(productItem);
+                    itemsUl.appendChild(itemLi);
+                });
 
-          const metadataIcon = document.createElement("span");
-          metadataIcon.classList.add("metadata-icon");
-          metadataIcon.innerHTML = "&#9432;";
+                subLi.appendChild(itemsUl);
+                subUl.appendChild(subLi);
+            }
 
-          // Launch metadata panel
-          metadataIcon.addEventListener("click", () => {
-              console.log("Metadata for item:", item);
-              const metadataBox = document.getElementById("metadata-box");
-              const metadataContent = document.getElementById("metadata-content");
-
-
-              const metadataToShow = ["Description", "File type", "Time period", "Spatial resolution", "Extent", "Owner", "CRS"];
-
-              metadataContent.innerHTML = "";
-              for (const key in item) {
-                if (item.hasOwnProperty(key) && metadataToShow.includes(key)) {
-                  const propertyDiv = document.createElement("div");
-                  propertyDiv.style.textAlign = "left";
-
-                  propertyDiv.innerHTML = `<strong>${key}</strong><br>${item[key]}<br><br>`;
-                  metadataContent.appendChild(propertyDiv);
-              }
-
-              metadataBox.classList.remove("hidden");
-
-          }});
-
-          productItem.appendChild(itemA);
-          productItem.appendChild(metadataIcon);
-
-          itemLi.appendChild(productItem);
-          itemsUl.appendChild(itemLi);
-      });
-
-      subLi.appendChild(itemsUl);
-      subUl.appendChild(subLi);
+            categoryLi.appendChild(subUl);
+            container.appendChild(categoryLi);
+        }
     }
+});
 
-    categoryLi.appendChild(subUl);
-    menuContainer.appendChild(categoryLi);
-  }
-}
 
 // Toggle submenus on click
 $(document).on("click", "#leftside-navigation li > a", function (e) {

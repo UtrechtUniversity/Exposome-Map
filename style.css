@@ -1,17 +1,63 @@
-/* Everything should have the font Ebrima bold*/
 body {
     font-family: Ebrima , sans-serif;
     font-weight: bold;
+    height: 100%;
 }
 
 #top-bar {
-    background-color: #4C9F38; 
-    height: 70px; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #4C9F38;
     display: flex;
     align-items: center;
-    padding: 0 20px; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    padding: 0 20px; /* left and right breathing room */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
+
+.view {
+    position: absolute;
+    top: 70px; /* below top-bar */
+    left: 0;
+    width: 100%;
+    bottom: 0; /* take all remaining space */
+    display: none; /* hide inactive views */
+    overflow: auto;
+    display: none;
+    flex-direction: row; /* adjust if needed */
+}
+
+.view.active {
+    display: flex;
+}
+
+#title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+#view_buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* remove margin-left completely */
+}
+
+/* #CatalogueView {
+  height: 100%; 
+}
+
+#MapView {
+    display: flex;
+    height: 100%;
+    width: 100%;
+} */
+
 
 /* Text styling */
 #top-bar .top-bar-text {
@@ -22,10 +68,9 @@ body {
     text-align: center;
 }
 
-/* Make map_container relative for absolute sidebar positioning */
 #map_container {
-    position: relative;
-    height: calc(100vh - 70px); /* Full height minus top bar */
+    flex: 1;                  /* take remaining space next to sidebar */
+    position: relative;       /* for labels and slider */
 }
 
 #sidebar {
@@ -63,8 +108,8 @@ body {
 
 /* Make map the same width as the top bar */
 #map {
-    height: 100%;
     width: 100%;
+    height: 100%;
 }
 
 #map_label{
@@ -386,4 +431,101 @@ body {
 
 .change .toggle_bar3 {
   transform: translate(0, -11px) rotate(45deg);
+}
+
+/* ################ CATALOGUE VIEW ######################## */
+.catalogue_sidebar {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 450px;
+  height: 100vh;
+  background-color: #19486A;
+  overflow-y: auto;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+#catalogue {
+  margin-left: 450px;
+  background-color: #19486A;
+  min-height: 100vh;
+  padding: 10px;
+  box-sizing: border-box;
+  padding-top: 100px;
+}
+
+
+.catalogue_sidebar {
+  background: #19486A;
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.3s ease-in-out;
+  z-index: 100;
+}
+
+#dynamic-populated-menu-catalogue-view {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#dynamic-populated-menu-catalogue-view li {
+  cursor: pointer;
+  padding: 18px 25px;   /* clickable area */
+  font-size: 40px;
+  color: #ffffff;
+  border-bottom: 2px solid rgba(82, 97, 78, 0.49);
+  user-select: none;
+  transition: color 0.2s ease-in;
+}
+
+#dynamic-populated-menu-catalogue-view li:hover {
+  color: #56C02B;
+}
+
+#dynamic-populated-menu-catalogue-view li.selected {
+  background-color: #e0f0ff;
+  font-weight: bold;
+  color: #19486A;  /* optional: keeps text readable on selected background */
+}
+
+.catalogue-item {
+  border: 1px solid #ccc;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  background-color: #19486A;
+  color: #ffffff;
+}
+
+.catalogue-item-title {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.catalogue-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.catalogue-item-row {
+  display: flex;
+  align-items: center;
+}
+
+.catalogue-item-key {
+  font-weight: bold;
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.catalogue-item-value {
+  font-weight: normal;
+  text-align: left;
+  flex: 1; 
 }
