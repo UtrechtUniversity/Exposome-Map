@@ -17,6 +17,29 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 }
+/* Text styling */
+#top-bar .top-bar-text {
+    font-family: Ebrima , sans-serif;
+    font-size: 40px; 
+    color: rgb(255, 255, 255); 
+    margin: 0 auto;
+    text-align: center;
+}
+
+.viewbutton {
+    background-color: #00689D;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.viewbutton.active {
+    font-weight: bold;
+    border: 6px solid #19486A;
+}
 
 .view {
     position: absolute;
@@ -45,27 +68,8 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-right: 60px;
     /* remove margin-left completely */
-}
-
-/* #CatalogueView {
-  height: 100%; 
-}
-
-#MapView {
-    display: flex;
-    height: 100%;
-    width: 100%;
-} */
-
-
-/* Text styling */
-#top-bar .top-bar-text {
-    font-family: Ebrima , sans-serif;
-    font-size: 40px; 
-    color: rgb(255, 255, 255); 
-    margin: 0 auto;
-    text-align: center;
 }
 
 #map_container {
@@ -80,25 +84,26 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: fit-content;
-    min-width: 150px;
-    height: 70px;
+    width: 70px; /* collapsed width */
+    height: 100%;
     background-color: #19486A;
-    padding: 20px;
+    padding: 10px;
     z-index: 1000;
     box-sizing: border-box;
-    transition: max-height 0.4s ease;
+    overflow: hidden;
+    transition: width 0.3s ease, padding 0.3s ease;
 }
 
 #sidebar.open {
-  padding-top: 70px;
-  height: 100%;
+  /* Add a buffer on the top */
+  width: fit-content;
+  padding: 20px;
 }
 
 #sidebar aside {
   opacity: 0;
   pointer-events: none;
-  transition: max-height 0.0s ease;
+  transition: opacity 0.3s ease;
 }
 
 #sidebar.open aside {
@@ -146,6 +151,7 @@ body {
   transition: all .3s ease-in-out;
   z-index: 100;
   #leftside-navigation {
+    margin-top: 40px;
     ul, ul ul {
       margin: -2px 0 0;
       padding: 0;
@@ -398,19 +404,15 @@ body {
     font-size: 12px;
     text-align: center;
 }
-.slider-container.collapsed {
-    display: none;
-}
 
 #opacity-slider {
     width: 180px;
 }
 
-/* Sidebar toggler */
 .toggle_container {
   display: inline-block;
   cursor: pointer;
-  left: 30px;
+  left: 18px;
   position: absolute;
   top: 20px;
   z-index: 1001;

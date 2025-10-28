@@ -135,7 +135,32 @@ map.on('click', function(e) {
     var x = Math.round(point.x);
     var y = Math.round(point.y);
 
-    var requestURL = `${geoserverURL}?request=GetFeatureInfo&service=WMS&version=1.1.0&layers=${layerName}&query_layers=${layerName}&info_format=text/plain&x=${x}&y=${y}&width=${map.getSize().x}&height=${map.getSize().y}&bbox=${bbox}&srs=EPSG%3A4326`;
+    var requestURL = `${geoserverURL}?request=GetFeatureInfo&service=WMS&version=1.1.0&layers=${layerName}&query_layers=${layerName}&info_format=application/json&x=${x}&y=${y}&width=${map.getSize().x}&height=${map.getSize().y}&bbox=${bbox}&srs=EPSG%3A4326`;
+    fetch(requestURL).then(response => {
+        if (!response.ok) {
+            throw new Error('No network response');
+        }
+        return response.json();
+    }).then(data => {
+                    if (!data || !data.features || data.features.length === 0) return;
+        
+                    var popupContent = '';
+                    var grayIndex = null;
+                    console.log(data);
+                    
+                    grayIndex = data.features[0].properties.GRAY_INDEX
+                    if (!grayIndex) return;
+                    console.log(grayIndex)
+                    popupContent = `${Math.round(grayIndex * 10) / 10}`;
+
+                    L.popup()
+                        .setLatLng(e.latlng)
+                        .setContent(popupContent)
+                        .openOn(map);
+                }).catch(error => {
+                    console.error('Couldnt fetch value:', error);
+                });
+
     console.log("GetFeatureInfo URL: ", requestURL);
 });
 

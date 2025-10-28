@@ -31,11 +31,11 @@
             <span class="top-bar-text">EXPANSE Map Prototype</span>
         </div>
         <div id="view_buttons" class="view-buttons">
-            <button id="mapViewBtn" class="active">Map View</button>
-            <button id="catalogueViewBtn">Catalogue View</button>
+            <button id="mapViewBtn" class="viewbutton active">Map View</button>
+            <button id="catalogueViewBtn" class="viewbutton">Catalogue View</button>
         </div>
     </div>
-    <div id="MapView" class="view">
+    <div id="MapView" class="view active">
         <div id="map_container">
             <div id="map"></div>
             <div id="map-label">Select a theme and a time to display on the map</div>
@@ -72,8 +72,8 @@
             </div>
         </div>
     </div>
-    <div id = "CatalogueView" class="view active">
-        <aside class="catalogue_sidebar">
+    <div id = "CatalogueView" class="view">
+        <aside class="sidebar">
             <div id="leftside-navigation" class="nano">
                 <ul class="nano-content" id="dynamic-populated-menu-catalogue-view">
                     <!-- menu gets automatically populated here based on a JSON -->
