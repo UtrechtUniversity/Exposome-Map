@@ -33,6 +33,16 @@
         <div id="view_buttons" class="view-buttons">
             <button id="mapViewBtn" class="viewbutton active">Map View</button>
             <button id="catalogueViewBtn" class="viewbutton">Catalogue View</button>
+            <button id="info_button" class="info-button">&#9432;</button>
+        </div>
+
+    </div>
+    <div id="infoBox" class="info-box hidden">
+        <button id="info-close" class="info-close">&times;</button>
+        <div id="info-content">
+            <p>This data portal provides access to data collected for the EXPANSE project. To request 
+                any datset, email ____. Send questions to ___.
+            </p>
         </div>
     </div>
     <div id="MapView" class="view active">
@@ -66,20 +76,23 @@
                 <button id="showOnMapBtn" disabled>Show on Map</button>
                 
             </aside>
-            <div id="metadata-box" class="metadata-box hidden">
-                <button id="metadata-close">&times;</button>
-                <div id="metadata-content"></div>
-            </div>
+
+        </div>
+        <div id="metadata-box" class="metadata-box hidden">
+            <button id="metadata-close">&times;</button>
+            <div id="metadata-content"></div>
         </div>
     </div>
     <div id = "CatalogueView" class="view">
-        <aside class="sidebar">
-            <div id="leftside-navigation" class="nano">
-                <ul class="nano-content" id="dynamic-populated-menu-catalogue-view">
-                    <!-- menu gets automatically populated here based on a JSON -->
-                </ul>
-            </div>
-        </aside>
+        <div id="sidebar" class="open">
+            <aside class="sidebar">
+                <div id="leftside-navigation" class="nano">
+                    <ul class="nano-content" id="dynamic-populated-menu-catalogue-view">
+                        <!-- menu gets automatically populated here based on a JSON -->
+                    </ul>
+                </div>
+            </aside>
+        </div>
         <div id="catalogue">
             <div id="catalogue-panel"></div>
         </div>
@@ -115,7 +128,21 @@
         mapBtn.addEventListener("click", () => activateView("map"));
         catalogueBtn.addEventListener("click", () => activateView("catalogue"));
     </script>
-    
+
+    <script>
+        const infoButton = document.getElementById("info_button");
+        const infoBox = document.getElementById("infoBox");
+        const infoCloseButton = document.getElementById("info-close");
+
+        infoButton.addEventListener("click", () => {
+            infoBox.classList.remove("hidden");
+        });
+
+        infoCloseButton.addEventListener("click", () => {
+            infoBox.classList.add("hidden");
+        });
+    </script>
+
     <!-- External scripts-->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
     

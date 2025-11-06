@@ -1,47 +1,45 @@
+const menuContainerCatalogue = document.getElementById("dynamic-populated-menu-catalogue-view");
+
 window.dataCataloguePromise.then(data => {
-    initMenu(data);
+    initMenu(data, menuContainerCatalogue);
 });
 
-const menuContainerCatalogue = document.getElementById("dynamic-populated-menu-catalogue-view");
-function initMenu(dataCatalogue) {
+function initMenu(dataCatalogue, container) {
     for (const category in dataCatalogue) {
-        // --- Top-level category ---
+        // --- Category level ---
         const categoryLi = document.createElement("li");
         categoryLi.classList.add("category");
-        categoryLi.textContent = category;
 
-        // --- Subcategory list ---
+        const categoryA = document.createElement("a");
+        categoryA.href = "javascript:void(0)";
+        categoryA.innerHTML = `<span>${category.replace(/_/g, " ")}</span>`;
+        categoryLi.appendChild(categoryA);
+
         const subUl = document.createElement("ul");
-
         for (const subcategory in dataCatalogue[category]) {
             const subLi = document.createElement("li");
             subLi.classList.add("subcategory");
-            subLi.textContent = subcategory;
 
-            // Attach the data for this subcategory
-            subLi.subcategoryData = dataCatalogue[category][subcategory];
+            const subA = document.createElement("a");
+            subA.href = "javascript:void(0)";
+            subA.textContent = subcategory.replace(/_/g, " ");
+            subLi.appendChild(subA);
 
-            // Subcategory click opens the catalogue panel
-            subLi.addEventListener("click", (e) => {
-                e.stopPropagation(); // Prevent bubbling to category toggle
-
-                // Remove "selected" from all subcategories
-                menuContainerCatalogue.querySelectorAll("li.subcategory").forEach(li => li.classList.remove("selected"));
-
-                // Highlight this subcategory
-                subLi.classList.add("selected");
-
-                // Open catalogue panel
-                openCataloguePanel(subLi.subcategoryData);
+            subA.addEventListener("click", (e) => {
+                e.stopPropagation();
+                container.querySelectorAll(".subcategory a.selected").forEach(a => a.classList.remove("selected"));
+                subA.classList.add("selected");
+                const subcategoryItems = dataCatalogue[category][subcategory];
+                openCataloguePanel(subcategoryItems);
             });
 
             subUl.appendChild(subLi);
         }
-
         categoryLi.appendChild(subUl);
-        menuContainerCatalogue.appendChild(categoryLi);
+        container.appendChild(categoryLi);
     }
 }
+
 
 // Toggle submenus on category click
 $(document).on("click", "#dynamic-populated-menu-catalogue-view > li.category", function (e) {
@@ -72,8 +70,11 @@ function openCataloguePanel(subcategoryItems) {
         const contentDiv = document.createElement("div");
         contentDiv.classList.add("catalogue-item-content");
 
+        // Only include specified keys
+        const specifiedKeys = ["id", "Description", "Category", "Subcategory"];
+        
         for (const key in item) {
-            if (item.hasOwnProperty(key) && key !== "Description") {
+            if (item.hasOwnProperty(key) && key !== "Description" && specifiedKeys.includes(key)) {
                 const rowDiv = document.createElement("div");
                 rowDiv.classList.add("catalogue-item-row");
 

@@ -38,10 +38,14 @@ window.dataCataloguePromise.then(data => {
                   const metadataIcon = document.createElement("span");
                   metadataIcon.classList.add("metadata-icon");
                   metadataIcon.innerHTML = "&#9432;";
+
                   metadataIcon.addEventListener("click", () => {
                       const metadataBox = document.getElementById("metadata-box");
                       const metadataContent = document.getElementById("metadata-content");
+
+                      // Clear previous content
                       metadataContent.innerHTML = "";
+
                       ["Description","File type","Time period","Spatial resolution","Extent","Owner","CRS"].forEach(key => {
                           if(item[key]) {
                               const div = document.createElement("div");
@@ -50,6 +54,12 @@ window.dataCataloguePromise.then(data => {
                               metadataContent.appendChild(div);
                           }
                       });
+
+                      // Position the metadata box to the right of the sidebar
+                      const sidebar = document.getElementById("sidebar");
+                      const sidebarRect = sidebar.getBoundingClientRect();
+                      metadataBox.style.left = `${sidebarRect.right}px`;
+
                       metadataBox.classList.remove("hidden");
                   });
 
@@ -172,34 +182,44 @@ function display_time_component(item) {
     }
 
     case "Annual": {
-      const start_time = item.start_time;
-      const end_time = item.end_time;
-
-      const startYear = parseInt(start_time.split("_")[2]);
-      const endYear = parseInt(end_time.split("_")[2]);
-
       const select = document.createElement("select");
       select.classList.add("year-select");
       select.id = "yearPicker";
 
       const emptyOption = document.createElement("option");
       emptyOption.value = "";
-      emptyOption.textContent = "";
+      emptyOption.textContent = "Select a year";
       emptyOption.disabled = true;
       emptyOption.selected = true;
       select.appendChild(emptyOption);
 
+      if (item.available_years && item.available_years.length > 0) {
+        const years = item.available_years.split(",").map(y => y.trim());
+        years.forEach(year => {
+          const option = document.createElement("option");
+          option.classList.add("year_option");
+          option.value = year;
+          option.textContent = year;
+          select.appendChild(option);
+        });
+      }
+      else {
+        const start_time = item.start_time;
+        const end_time = item.end_time;
 
-      for (let year = startYear; year <= endYear; year++) {
-        const option = document.createElement("option");
-        option.classList.add("year_option");
-        option.value = year;
-        option.textContent = year;
-        select.appendChild(option);
+        const startYear = parseInt(start_time.split("_")[2]);
+        const endYear = parseInt(end_time.split("_")[2]);
+
+        for (let year = startYear; year <= endYear; year++) {
+          const option = document.createElement("option");
+          option.classList.add("year_option");
+          option.value = year;
+          option.textContent = year;
+          select.appendChild(option);
+        }
       }
 
       if (lastSelected) select.value = lastSelected;
-
       select.addEventListener("change", () => {
         window.selectedDate = select.value;
       });

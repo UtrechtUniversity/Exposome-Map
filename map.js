@@ -2,8 +2,9 @@ var map = L.map('map').setView([47.58, 6.06], 6);
 window.currentDisplayedLayer = null;
 map.createPane('basemaps');
 
-var geoserverURL = "http://127.0.0.1:8080/geoserver/EXPANSE_map_prototype/wms";
-var geoserver_workspace = "EXPANSE_map_prototype";
+var geoserverURL = "http://127.0.0.1:8080/geoserver/EXPANSE_map/wms";
+
+var geoserver_workspace = "EXPANSE_map";
 
 var slider = document.getElementById("opacity-slider");
 var opacityValue = parseFloat(slider.value);
@@ -94,8 +95,6 @@ document.getElementById("showOnMapBtn").addEventListener("click", function() {
     if (window.selectedItem) {        
         var layerName = window.selectedItem.geoserver_layer;
         console.log("Layer name:", layerName);
-        var style = window.selectedItem.geoserver_style;
-        console.log("Style:", style);
         
         selectDateCleanup(window.selectedDate)
 
@@ -107,12 +106,12 @@ document.getElementById("showOnMapBtn").addEventListener("click", function() {
         console.log("Current Opacity value:", opacityValue);
         window.currentDisplayedLayer = L.tileLayer.wms(geoserverURL, {
             layers: `${geoserver_workspace}:${layerName}`,
-            TIME: window.dateParameter,
+            // TIME: window.dateParameter,
             format: 'image/png',
             version: '1.1.0',
+            styles: '', // Use default style, predefined in layer
             transparent: true,
             attribution: "",
-            styles: style,
             pane: 'overlayPane'
         }).addTo(map).setOpacity(opacityValue).bringToFront();
 
