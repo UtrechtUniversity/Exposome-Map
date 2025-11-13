@@ -27,11 +27,14 @@ body {
 }
 /* Text styling */
 #top-bar .top-bar-text {
-    font-family: Ebrima , sans-serif;
     font-size: 40px; 
     color: rgb(255, 255, 255); 
     margin: 0 auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
+
 }
 
 .viewbutton {
@@ -84,7 +87,8 @@ body {
     position: relative;       /* for labels and slider */
 }
 
-#sidebar {
+#sidebar
+, #sidebar2 {
     position: fixed;
     top: 0;
     left: 0;
@@ -92,7 +96,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     font-size: 1em;
-    width: clamp(60px, 5vw, 100px); /* collapsed width */
+    width: clamp(60px, 4vw, 100px); /* collapsed width */
     height: 100%;
     background-color: #19486A;
     padding: clamp(8px, 1vw, 20px);
@@ -103,20 +107,23 @@ body {
     overflow-y: auto;
 }
 
-#sidebar.open {
+#sidebar.open
+, #sidebar2.open {
   font-size: 1em;
     width: clamp(200px, 20vw, 350px); /* scales up to a max width */
     padding: clamp(10px, 2vw, 25px);
 }
 
-#sidebar aside {
+#sidebar aside,
+#sidebar2 aside {
   font-size: 1em;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
 }
 
-#sidebar.open aside {
+#sidebar.open aside,
+#sidebar2.open aside {
   font-size: 1em;
   opacity: 1;
   pointer-events: all;
@@ -387,13 +394,14 @@ body {
 /* ################ CATALOGUE VIEW ######################## */
 
 #catalogue {
-  background-color: #c51d87;
+  background-color: #19486A;
   min-height: 100vh;
   padding: 10px;
   box-sizing: border-box;
   padding-top: 10px;
   width: 100% ;
-}
+  margin-left: clamp(10vw, 18vw, 20vw);
+} 
 
 #catalogue-panel {
     display: grid;
@@ -401,6 +409,8 @@ body {
     padding: 16px;
     box-sizing: border-box;
     align-items: start; /* makes grid rows align neatly */
+    /* margin-left: 800; */
+    /* clamp(60px, 4vw, 100px) */
 }
 
 .catalogue_sidebar {
@@ -423,27 +433,28 @@ body {
 }
 
 .catalogue-item-title {
-  font-size: 1.5em;
-  margin-bottom: 8px;
+  font-size: 2.0em;
+  margin-bottom: 10px;
   font-weight: bold;
 }
 
 .catalogue-item-content {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px 16px; /* row gap, column gap */
+  gap: 8px 10px; /* row gap, column gap */
 }
 
 .catalogue-item-row {
   display: flex;
   justify-content: space-between; /* key left, value right */
   align-items: center;
-  gap: 8px;
+  gap: 2px;
+  font-size: 1.25em;
 }
 
 .catalogue-item-key {
   font-weight: bold;
-  flex: 0 0 40%; /* key takes ~40% of cell width */
+  flex: 0 0 40%; /* key takes ~40% of cell width */ 
   text-align: left;
 }
 
@@ -460,15 +471,16 @@ body {
 /* Info Box */
 #infoBox {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 300px;
+  top: 100px;
+  right: 100px;
+  width: 75vw;
   background: white;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 2000;
   padding: 15px;
+  font-size: 1.5em;
 }
 
 #infoBox.hidden {

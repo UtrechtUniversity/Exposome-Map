@@ -9,8 +9,6 @@ var geoserver_workspace = "EXPANSE_map";
 var slider = document.getElementById("opacity-slider");
 var opacityValue = parseFloat(slider.value);
 
-window.dateParameter = null;
-
 // Basemap options
 var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a>OpenStreetMap</a> contributors',
@@ -69,24 +67,21 @@ function selectDateCleanup(dateStr) {
     "Dec": "12"
     };
     if (length === 4) { // Yearly, add day and month
-        window.dateParameter = dateStr + "-01-01" + "T00:00:00.000Z"; // January 1 of that year
-        // Ex: 2024-01-01T00:00:00.000Z
+        return dateStr
     }
-    else if (length === 8) { // Monthly, add day and convert month number
+    else if (length === 8) { // Monthly, convert month number
         var month = dateStr.substring(0, 3);
 
         month = monthMap[month];
         // Add month to the year part
-        window.dateParameter = dateStr.substring(4, 8) + "-" + month + "-01" + "T00:00:00.000Z"; // 1st day of that month
-        // Ex: 2024-12-01T00:00:00.000Z
+        return dateStr.substring(4, 8) + "-" + month; // 1st day of that month
     }
     else {
         var day = dateStr.substring(0, 2);
         var month = dateStr.substring(3, 6);
         month = monthMap[month];
         var year = dateStr.substring(7, 11);
-        window.dateParameter = year + "-" + month + "-" + day + "T00:00:00.000Z";
-        // Ex: 2024-12-15T00:00:00.000Z
+        return year + "-" + month + "-" + day;
     }
 }
 
@@ -95,10 +90,8 @@ document.getElementById("showOnMapBtn").addEventListener("click", function() {
     if (window.selectedItem) {        
         var layerName = window.selectedItem.geoserver_layer;
         console.log("Layer name:", layerName);
-        
-        selectDateCleanup(window.selectedDate)
-
-        console.log("Date parameter for WMS request:", window.dateParameter);
+        var dateParameter = selectDateCleanup(window.selectedDate);
+        console.log("Date parameter for WMS request:", dateParameter);
 
         if (window.currentDisplayedLayer) {
             map.removeLayer(window.currentDisplayedLayer);
@@ -106,7 +99,7 @@ document.getElementById("showOnMapBtn").addEventListener("click", function() {
         console.log("Current Opacity value:", opacityValue);
         window.currentDisplayedLayer = L.tileLayer.wms(geoserverURL, {
             layers: `${geoserver_workspace}:${layerName}`,
-            // TIME: window.dateParameter,
+            time: dateParameter,
             format: 'image/png',
             version: '1.1.0',
             styles: '', // Use default style, predefined in layer

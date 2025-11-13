@@ -59,7 +59,7 @@ function openCataloguePanel(subcategoryItems) {
     subcategoryItems.forEach(item => {
         const itemDiv = document.createElement("div");
         itemDiv.classList.add("catalogue-item");
-
+        
         // Title
         const titleDiv = document.createElement("div");
         titleDiv.classList.add("catalogue-item-title");
@@ -71,8 +71,8 @@ function openCataloguePanel(subcategoryItems) {
         contentDiv.classList.add("catalogue-item-content");
 
         // Only include specified keys
-        const specifiedKeys = ["id", "Description", "Category", "Subcategory"];
-        
+        const specifiedKeys = ["Description", "Category", "theme", "file_name", "File type", "time_period", "temporal_resolution", "Spatial resolution", "Extent", "crs", "Owner", "comments", "no_data_value"];
+
         for (const key in item) {
             if (item.hasOwnProperty(key) && key !== "Description" && specifiedKeys.includes(key)) {
                 const rowDiv = document.createElement("div");
