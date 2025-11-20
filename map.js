@@ -2,7 +2,7 @@ var map = L.map('map').setView([47.58, 6.06], 6);
 window.currentDisplayedLayer = null;
 map.createPane('basemaps');
 
-var geoserverURL = "http://127.0.0.1:8080/geoserver/EXPANSE_map/wms";
+var geoserverURL = "https://geoserver-openshift-2-dgk-prd-expomaps.apps.cl01.cp.its.uu.nl/geoserver/EXPANSE_map/wms";
 
 var geoserver_workspace = "EXPANSE_map";
 
