@@ -5,78 +5,78 @@ window.dataCataloguePromise.then(data => {
   initMenu(data, menuContainer);
 });
 
-  function initMenu(dataCatalogue, container) {
-      for (const category in dataCatalogue) {
-          const categoryLi = document.createElement("li");
-          categoryLi.classList.add("sub-menu");
+function initMenu(dataCatalogue, container) {
+    for (const category in dataCatalogue) {
+        const categoryLi = document.createElement("li");
+        categoryLi.classList.add("sub-menu");
 
-          const categoryA = document.createElement("a");
-          categoryA.href = "javascript:void(0)";
-          categoryA.innerHTML = `<span>${category.replace(/_/g, " ")}</span>`;
-          categoryLi.appendChild(categoryA);
+        const categoryA = document.createElement("a");
+        categoryA.href = "javascript:void(0)";
+        categoryA.innerHTML = `<span>${category.replace(/_/g, " ")}</span>`;
+        categoryLi.appendChild(categoryA);
 
-          const subUl = document.createElement("ul");
-          for (const subcategory in dataCatalogue[category]) {
-              const subLi = document.createElement("li");
-              const subA = document.createElement("a");
-              subA.href = "javascript:void(0)";
-              subA.textContent = subcategory.replace(/_/g, " ");
-              subLi.appendChild(subA);
+        const subUl = document.createElement("ul");
+        for (const subcategory in dataCatalogue[category]) {
+            const subLi = document.createElement("li");
+            const subA = document.createElement("a");
+            subA.href = "javascript:void(0)";
+            subA.textContent = subcategory.replace(/_/g, " ");
+            subLi.appendChild(subA);
 
-              const itemsUl = document.createElement("ul");
-              dataCatalogue[category][subcategory].forEach(item => {
-                  if (item.show_on_map !== true) return;
+            const itemsUl = document.createElement("ul");
+            dataCatalogue[category][subcategory].forEach(item => {
+                if (item.show_on_map !== true) return;
 
-                  const itemLi = document.createElement("li");
-                  const productItem = document.createElement("div");
-                  productItem.classList.add("product-item");
+                const itemLi = document.createElement("li");
+                const productItem = document.createElement("div");
+                productItem.classList.add("product-item");
 
-                  const itemA = document.createElement("a");
-                  itemA.textContent = item.Description;
-                  itemA.itemData = item;
+                const itemA = document.createElement("a");
+                itemA.textContent = item.Description;
+                itemA.itemData = item;
 
-                  const metadataIcon = document.createElement("span");
-                  metadataIcon.classList.add("metadata-icon");
-                  metadataIcon.innerHTML = "&#9432;";
+                const metadataIcon = document.createElement("span");
+                metadataIcon.classList.add("metadata-icon");
+                metadataIcon.innerHTML = "&#9432;";
 
-                  metadataIcon.addEventListener("click", () => {
-                      const metadataBox = document.getElementById("metadata-box");
-                      const metadataContent = document.getElementById("metadata-content");
+                metadataIcon.addEventListener("click", () => {
+                    const metadataBox = document.getElementById("metadata-box");
+                    const metadataContent = document.getElementById("metadata-content");
 
-                      // Clear previous content
-                      metadataContent.innerHTML = "";
+                    // Clear previous content
+                    metadataContent.innerHTML = "";
 
-                      ["Description","File type","Time period","Spatial resolution","Extent","Owner","CRS"].forEach(key => {
-                          if(item[key]) {
-                              const div = document.createElement("div");
-                              div.style.textAlign = "left";
-                              div.innerHTML = `<strong>${key}</strong><br>${item[key]}<br><br>`;
-                              metadataContent.appendChild(div);
-                          }
-                      });
+                    ["Description","File type","Time period","Spatial resolution","Extent","Owner","CRS"].forEach(key => {
+                        if(item[key]) {
+                            const div = document.createElement("div");
+                            div.style.textAlign = "left";
+                            div.innerHTML = `<strong>${key}</strong><br>${item[key]}<br><br>`;
+                            metadataContent.appendChild(div);
+                        }
+                    });
 
-                      // Position the metadata box to the right of the sidebar
-                      const sidebar = document.getElementById("sidebar");
-                      const sidebarRect = sidebar.getBoundingClientRect();
-                      metadataBox.style.left = `${sidebarRect.right}px`;
+                    // Position the metadata box to the right of the sidebar
+                    const sidebar = document.getElementById("sidebar");
+                    const sidebarRect = sidebar.getBoundingClientRect();
+                    metadataBox.style.left = `${sidebarRect.right}px`;
 
-                      metadataBox.classList.remove("hidden");
-                  });
+                    metadataBox.classList.remove("hidden");
+                });
 
-                  productItem.appendChild(itemA);
-                  productItem.appendChild(metadataIcon);
-                  itemLi.appendChild(productItem);
-                  itemsUl.appendChild(itemLi);
-              });
+                productItem.appendChild(itemA);
+                productItem.appendChild(metadataIcon);
+                itemLi.appendChild(productItem);
+                itemsUl.appendChild(itemLi);
+            });
 
-              subLi.appendChild(itemsUl);
-              subUl.appendChild(subLi);
-          }
+            subLi.appendChild(itemsUl);
+            subUl.appendChild(subLi);
+        }
 
-          categoryLi.appendChild(subUl);
-          container.appendChild(categoryLi);
-      }
-  }
+        categoryLi.appendChild(subUl);
+        container.appendChild(categoryLi);
+    }
+}
 // Toggle submenus on click
 $(document).on("click", "#leftside-navigation li > a", function (e) {
   const nextUl = $(this).next("ul");
